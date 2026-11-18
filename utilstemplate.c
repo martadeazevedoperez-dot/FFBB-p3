@@ -8,8 +8,16 @@ void replaceExtensionByIdx(const char *fileName, char * indexName) {
 
 
 bool createTable(const char * tableName) {
-    return true;
+    FILE *table;
+
+    if(fopen(tableName, "r") != NULL) {
+        
+        
+        return false;
     }
+
+    return true;
+}
 
 bool createIndex(const char *indexName) {
     return true;
