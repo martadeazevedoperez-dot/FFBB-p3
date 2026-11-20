@@ -8,14 +8,21 @@ void replaceExtensionByIdx(const char *fileName, char * indexName) {
 
 
 bool createTable(const char * tableName) {
-    FILE *table;
+    FILE *f;
+    int deleted = -1;
 
-    if(fopen(tableName, "r") != NULL) {
-        
-        
+    if((f=fopen(tableName, "r")) != NULL) {
+        fclose(f);
+        return true;
+    }
+
+    if((f=fopen(tableName, "r")) == NULL) {
         return false;
     }
 
+    fwrite(&deleted, sizeof(int), 1, f);
+
+    fclose(f);
     return true;
 }
 
