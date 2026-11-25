@@ -2,22 +2,34 @@
 
 int no_deleted_registers = NO_DELETED_REGISTERS;
 
-void replaceExtensionByIdx(const char *fileName, char * indexName) {
-    return;
-}
+void replaceExtensionByIdx(const char * fileName, char * indexName){
+    int i;
 
+    strcpy(indexName, fileName);
+
+    for ( i = 0; indexName[i] != '\0'; i++)
+    {
+        if (indexName[i] == '.')
+        {
+            indexName[i]='\0';
+            break;
+        }
+    }
+
+    trcat(indexName, ".idx");
+}
 
 bool createTable(const char * tableName) {
     FILE *f;
-    int deleted = -1, i;
-    char indexname[INDEX_HEADER_SIZE];
+    int deleted = -1;
+    char indexname[INDEX_NAME_SIZE];
 
     /*abre fichero datos*/
-    f=fopen(tableName, "r");
+    f=fopen(tableName, "rb");
 
     /*si no, lo crea, con cabezera -1 que indica que está vacio*/
     if(!f) {
-        f=fopen(tableName, "w");
+        f=fopen(tableName, "wb");
         if (!f)
             return false;
 
@@ -31,18 +43,7 @@ bool createTable(const char * tableName) {
         fclose(f);
 
     /*aqui crea nombre fichero indice*/
-    strcpy(indexname, tableName);
-
-    for ( i = 0; indexname[i] != '\0'; i++)
-    {
-        if (indexname[i] == '.')
-        {
-            indexname[i]='\0';
-            break;
-        }
-    }
-
-    strcat(indexname, ".idx");
+    replaceExtensionByIdx(tableName, indexname);
 
     /*si es necesario crea el indice*/
     if (!createIndex(indexname))
@@ -57,14 +58,45 @@ bool createIndex(const char *indexName) {
 
     return true;
 }
-void printnode(size_t _level, size_t level,
-               FILE * indexFileHandler, int node_id, char side) {
+
+void printnode(size_t _level, size_t level, FILE * indexFileHandler, int node_id, char side) {
+
+
     return;
 }
 
 void printTree(size_t level, const char * indexName)
 {
-    return;
+    FILE *f;
+    int root;
+    int deleted;
+
+    f=fopen(indexName, "rb");
+    if (!f)
+        return;
+        
+    /*obtiene del indice la cabecera*/
+    if(fread(&root, sizeof(int), 1, f) != 1){
+        fclose(f);
+        return;
+    }
+    if(fread(&deleted, sizeof(int), 1, f) != 1){
+        fclose(f);
+        return;
+    }
+
+    /*si esta vacio no imprime nada*/
+    if (root == -1)
+    {
+        fclose(f);
+        return;
+    }
+    else /*sino imprime nodos*/
+    {
+        printnode(0 , level, f, root, NULL);
+        fclose(f);
+    }
+    
 }
 
 bool findKey(const char * book_id, const char *indexName,

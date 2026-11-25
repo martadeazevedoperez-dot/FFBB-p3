@@ -12,6 +12,7 @@
 #define NO_DELETED_REGISTERS -1
 
 #define INDEX_HEADER_SIZE 8
+#define INDEX_NAME_SIZE 100
 #define DATA_HEADER_SIZE  4
 #define PK_SIZE 4
 
