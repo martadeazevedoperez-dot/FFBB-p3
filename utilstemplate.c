@@ -11,22 +11,26 @@ bool createTable(const char * tableName) {
     FILE *f;
     int deleted = -1;
 
-    if((f=fopen(tableName, "r")) != NULL) {
-        fclose(f);
-        return true;
+    f=fopen(tableName, "r");
+
+    if(!f) {
+        f=fopen(tableName, "w");
+        if (!f)
+            return false;
+
+        if (fwrite(&deleted, sizeof(int), 1, f) != 1) {
+            fclose(f);
+            return false;
+        }
     }
 
-    if((f=fopen(tableName, "r")) == NULL) {
-        return false;
-    }
-
-    fwrite(&deleted, sizeof(int), 1, f);
-
+    /*aqui crea index*/
     fclose(f);
     return true;
 }
 
 bool createIndex(const char *indexName) {
+    
     return true;
 }
 void printnode(size_t _level, size_t level,
