@@ -6,6 +6,8 @@
 #define CODE_V2_UTILS_H
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define NO_DELETED_REGISTERS -1
 

@@ -9,10 +9,13 @@ void replaceExtensionByIdx(const char *fileName, char * indexName) {
 
 bool createTable(const char * tableName) {
     FILE *f;
-    int deleted = -1;
+    int deleted = -1, i;
+    char indexname[INDEX_HEADER_SIZE];
 
+    /*abre fichero datos*/
     f=fopen(tableName, "r");
 
+    /*si no, lo crea, con cabezera -1 que indica que está vacio*/
     if(!f) {
         f=fopen(tableName, "w");
         if (!f)
@@ -22,15 +25,36 @@ bool createTable(const char * tableName) {
             fclose(f);
             return false;
         }
+        fclose(f);
+    }
+    else
+        fclose(f);
+
+    /*aqui crea nombre fichero indice*/
+    strcpy(indexname, tableName);
+
+    for ( i = 0; indexname[i] != '\0'; i++)
+    {
+        if (indexname[i] == '.')
+        {
+            indexname[i]='\0';
+            break;
+        }
     }
 
-    /*aqui crea index*/
-    fclose(f);
+    strcat(indexname, ".idx");
+
+    /*si es necesario crea el indice*/
+    if (!createIndex(indexname))
+    {
+        return false;
+    }
+
     return true;
 }
 
 bool createIndex(const char *indexName) {
-    
+
     return true;
 }
 void printnode(size_t _level, size_t level,
