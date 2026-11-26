@@ -55,6 +55,36 @@ bool createTable(const char * tableName) {
 }
 
 bool createIndex(const char *indexName) {
+    FILE *f;
+    int header[2];
+
+    if(!indexName){
+	    return false;
+    }
+
+    f = fopen(indexName, "rb");
+    if(f){
+	    fclose(f);
+	    return true,
+    }
+
+    f = fopen(indexName, "wb");
+    if(!f){
+	    return false;
+    }
+
+    header[0] = NO_DELETED_REGISTERS;
+    header[1] = NO_DELETED_REGISTERS;
+    
+    if(fwrite(header, sizeof(int), 2, f) != 2){
+	    fclose(f);
+	    return false;
+    }
+
+    if(fclose(f) != 0){
+	    return false;
+    }
+
 
     return true;
 }
